@@ -1,6 +1,16 @@
 //
 // Created by Stein.Jonker on 13/06/2024.
 //
+/*
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com/arduino-load-cell-hx711/
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files.
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+*/
 
 
 #include <Arduino.h>
@@ -11,43 +21,31 @@
 #define LOADCELL_DOUT_PIN  4    // D2, GPIO4
 #define LOADCELL_SCK_PIN  2     // D4, GPIO2
 
+
 HX711 scale;
 
-float calibration_factor = -7050; //-7050 worked for my 440lb max scale setup
-
 void setup() {
-    Serial.begin(9600);
-    Serial.println("HX711 calibration sketch");
-    Serial.println("Remove all weight from scale");
-    Serial.println("After readings begin, place known weight on scale");
-    Serial.println("Press + or a to increase calibration factor");
-    Serial.println("Press - or z to decrease calibration factor");
-
+    Serial.begin(57600);
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
-    scale.set_scale();
-    scale.tare(); //Reset the scale to 0
-
-    long zero_factor = scale.read_average(); //Get a baseline reading
-    Serial.print("Zero factor: "); //This can be used to remove the need to tare the scale. Useful in permanent scale projects.
-    Serial.println(zero_factor);
 }
 
 void loop() {
-
-    scale.set_scale(calibration_factor); //Adjust to this calibration factor
-    Serial.print("Reading: ");
-    Serial.print(scale.get_units(), 1);
-    Serial.print(" lbs"); //Change this to kg and re-adjust the calibration factor if you follow SI units like a sane person
-    Serial.print(" calibration_factor: ");
-    Serial.print(calibration_factor);
-    Serial.println();
-
-    if(Serial.available())
-    {
-        char temp = Serial.read();
-        if(temp == '+' || temp == 'a')
-            calibration_factor += 10;
-        else if(temp == '-' || temp == 'z')
-            calibration_factor -= 10;
+    if (scale.is_ready()) {
+        scale.set_scale();
+        Serial.println("Tare... remove any weights from the scale.");
+        delay(5000);
+        scale.tare();
+        Serial.println("Tare done...");
+        Serial.print("Place a known weight on the scale...");
+        delay(5000);
+        long reading = scale.get_units(10);
+        Serial.print("Result: ");
+        Serial.println(reading);
     }
+    else {
+        Serial.println("HX711 not found.");
+    }
+    delay(1000);
 }
+
+//calibration factor will be the (reading)/(known weight)
