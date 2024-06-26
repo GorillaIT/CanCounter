@@ -28,12 +28,13 @@ class ConfigurationManager {
         void startConfigurationMode();
         void configureDevice();
         void resetConfig();
-public:
-    bool isConfigured = false;
-    void setup();
-    void run();
-    static SystemConfiguration getConfig();
-    static SystemConfiguration systemConfiguration;
+
+    public:
+        bool isConfigured = false;
+        void setup();
+        void run();
+        static SystemConfiguration getConfig();
+        static SystemConfiguration systemConfiguration;
 };
 
 
