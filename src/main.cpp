@@ -18,14 +18,17 @@
 
 #include "HX711.h"
 
-#define LOADCELL_DOUT_PIN  4    // D2, GPIO4
-#define LOADCELL_SCK_PIN  2     // D4, GPIO2
+#define LOADCELL_DOUT_PIN  2    // D4, GPIO2
+#define LOADCELL_SCK_PIN  0     // D3, GPIO0
 
 
 HX711 scale;
 
+//149470 = 229 g
+
 void setup() {
     Serial.begin(57600);
+
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 }
 
@@ -45,6 +48,7 @@ void loop() {
     else {
         Serial.println("HX711 not found.");
     }
+
     delay(1000);
 }
 
