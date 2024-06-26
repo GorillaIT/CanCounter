@@ -27,6 +27,10 @@ char angulon_index_html[]
             <label for='password'>Password</label>
             <input type='password' class='form-control' id='password' name='password' placeholder='Password' value='{{password}}'>
         </div>
+        <div class='form-group'>
+            <label for='averageCanWeightGrams'>Average Can Weight (grams)</label>
+            <input type='number' step='0.1' class='form-control' id='averageCanWeightGrams' name='averageCanWeightGrams' placeholder='Average Can Weight' value='{{averageCanWeightGrams}}'>
+        </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
 </div>
@@ -41,9 +45,8 @@ void ConfigurationManager::setup() {
     Serial.println("Loading configuration");
 
     preferences.begin("configuration", false);
-    isConfigured = preferences.getBool("isConfigured", false);
 
-    if (!isConfigured) {
+    if (!isConfigured()) {
         ConfigurationManager::startConfigurationMode();
     } else {
         this->loadConfiguration();
@@ -79,6 +82,7 @@ void ConfigurationManager::setupWebserver() {
         String html = angulon_index_html;
         html.replace("{{ssid}}", ssid);
         html.replace("{{password}}", password);
+        html.replace("{{averageCanWeightGrams}}", String(configuration.averageCanWeightGrams));
         server->send(200, "text/html", html);
     });
     server->on("/configure", [this]() {
@@ -104,16 +108,18 @@ void ConfigurationManager::setupWebserver() {
 void ConfigurationManager::configureDevice() {
     const String ssid = server->arg("ssid");
     const String password = server->arg("password");
+    const float averageCanWeightGrams = server->arg("averageCanWeightGrams").toFloat();
 
-    // Check if the ssid and password are not empty
-    if (ssid.length() == 0 || password.length() == 0) {
-        server->send(400, "text/plain", "SSID and password are required");
+    // Check if the ssid, password and averageCanWeightGrams are not empty
+    if (ssid.length() == 0 || password.length() == 0 || averageCanWeightGrams == 0.0) {
+        server->send(400, "text/plain", "SSID, password and average can weight are required");
         return;
     }
 
     // Save the configuration
     preferences.putString("ssid", ssid);
     preferences.putString("password", password);
+    preferences.putFloat("averageCanWeightGrams", averageCanWeightGrams);
 
     // Set the device as configured
     preferences.putBool("isConfigured", true);
@@ -154,7 +160,7 @@ void ConfigurationManager::run() {
     server->handleClient();
 
     // We only need to perform the Wi-Fi connection check if the system is configured
-    if (!isConfigured) return;
+    if (!isConfigured()) return;
 
     if (WiFi.status() != WL_CONNECTED) {
         unsigned long now = millis();
@@ -172,6 +178,7 @@ void ConfigurationManager::loadConfiguration() {
     SystemConfiguration config{};
     config.ssid = preferences.getString("ssid", "");
     config.password = preferences.getString("password", "");
+    config.averageCanWeightGrams = preferences.getFloat("averageCanWeightGrams", 0.0);
     systemConfiguration = config;
 }
 
@@ -179,8 +186,6 @@ SystemConfiguration ConfigurationManager::getConfig() {
     return systemConfiguration;
 }
 
-void ConfigurationManager::resetConfig() {
-    Serial.println("Resetting ESP, rebooting");
-    preferences.remove("isConfigured");
-    ESP.restart();
+bool ConfigurationManager::isConfigured() {
+    return preferences.getBool("isConfigured", false);
 }

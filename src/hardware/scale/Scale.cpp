@@ -3,6 +3,7 @@
 //
 
 #include "Scale.h"
+#include "connections/configuration/ConfigurationManager.h"
 
 #define LOADCELL_DOUT_PIN  2    // D4, GPIO2
 #define LOADCELL_SCK_PIN  0     // D3, GPIO0
@@ -31,8 +32,7 @@ void Scale::setup() {
                    1);    // print the average of 5 readings from the ADC minus tare weight (not set) divided
     // by the SCALE parameter (not set yet)
 
-    scale.set_scale(
-            calibration_factor);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+    scale.set_scale(calibration_factor);                      // this value is obtained by calibrating the scale with known weights; see the README for details
     scale.tare();                                        // reset the scale to 0
 
     Serial.println("After setting up the scale:");
@@ -60,7 +60,8 @@ void Scale::run() {
 }
 
 float Scale::convertWeightToCans(float weightInGrams) const {
-    return weightInGrams / AVERAGE_CAN_WEIGHT_GRAMS;
+    float averageCanWeightGrams = ConfigurationManager::getConfig().averageCanWeightGrams;
+    return weightInGrams / averageCanWeightGrams;
 }
 
 float Scale::getWeight() {

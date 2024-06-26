@@ -7,6 +7,8 @@
 struct SystemConfiguration {
     String ssid;
     String password;
+    // Average weight of grams of a can, 13.7g
+    float averageCanWeightGrams;
 };
 
 #endif //CANCOUNTER_SYSTEMCONFIGURATION_H

@@ -10,8 +10,6 @@
 class Scale {
 private:
     HX711 scale;
-    // Average weight of a can in grams
-    const float AVERAGE_CAN_WEIGHT_GRAMS = 14.6;
 public:
     void setup();
 

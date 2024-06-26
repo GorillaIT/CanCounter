@@ -21,11 +21,22 @@ void setup() {
     Serial.begin(57600);
     display.displayValue(8888);
     configurationManager.setup();
-    scale.setup();
+
+    if (configurationManager.isConfigured()){
+        scale.setup();
+    }
 }
 
 void loop() {
     configurationManager.run();
+
+    // The reading of the scale blocks the loop for a little while.
+    // This makes it impossible to connect to the AP if the scale is not configured yet
+    // So we want to skip all activity if the scale is not configured
+    if(!configurationManager.isConfigured()) {
+        return;
+    }
+
     // Uncomment this line to configure the device first time. It calls delay() which makes it impossible to connect to the AP
     scale.run();
 

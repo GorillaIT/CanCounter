@@ -22,17 +22,16 @@ class ConfigurationManager {
 
         unsigned long lastTimeConnected = 0L;
 
-        void setupWebserver();
+    void setupWebserver();
         void setupWiFi();
         void loadConfiguration();
         void startConfigurationMode();
         void configureDevice();
-        void resetConfig();
 
     public:
-        bool isConfigured = false;
         void setup();
         void run();
+        bool isConfigured();
         static SystemConfiguration getConfig();
         static SystemConfiguration systemConfiguration;
 };
