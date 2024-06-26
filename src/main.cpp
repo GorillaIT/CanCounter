@@ -23,4 +23,7 @@ void loop() {
     configurationManager.run();
     // Uncomment this line to configure the device first time. It calls delay() which makes it impossible to connect to the AP
     scale.run();
+
+
+    Serial.println("Amount of cans currently in the bin: " + String(round(scale.getAmountOfCans())));
 }

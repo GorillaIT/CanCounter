@@ -11,7 +11,6 @@
 // A samsung galaxy S21 Ultra weighs 229g and we got a reading of 149470
 // Use .0 at the end of the numbers to force the compiler to use floating point math
 float calibration_factor = 149470.0 / 229.0;
-// On average a can = 12.8g
 
 void Scale::setup() {
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
@@ -52,12 +51,8 @@ void Scale::setup() {
 }
 
 void Scale::run() {
-    Serial.print("one reading:\t");
-    Serial.print(scale.get_units(), 1);
-    Serial.print("\t| average:\t");
-    Serial.println(scale.get_units(10), 1);
+}
 
-    scale.power_down();			        // put the ADC in sleep mode
-    delay(1000);
-    scale.power_up();
+float Scale::getAmountOfCans(){
+    return scale.get_units(10) / AVERAGE_CAN_WEIGHT;
 }
