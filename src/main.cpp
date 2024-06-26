@@ -29,8 +29,11 @@ void loop() {
     // Uncomment this line to configure the device first time. It calls delay() which makes it impossible to connect to the AP
     scale.run();
 
-    int cans = round(scale.getAmountOfCans());
+    float weight = scale.getWeight();
+    int cans = round(scale.convertWeightToCans(weight));
     display.displayValue(cans);
 
-    Serial.println("Amount of cans currently in the bin: " + String(cans));
+    Serial.println("Weight: " + String(weight) + "g");
+    Serial.println("Cans: " + String(cans));
+    Serial.println();
 }
