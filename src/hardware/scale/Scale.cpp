@@ -47,7 +47,8 @@ void Scale::setup() {
     Serial.println(scale.get_units(5), 1);        // print the average of 5 readings from the ADC minus tare weight, divided
     // by the SCALE parameter set with set_scale
 
-    Serial.println("Readings:");
+    Serial.println("Scale Setup Complete");
+    Serial.println("============================================================");
 }
 
 void Scale::run() {
