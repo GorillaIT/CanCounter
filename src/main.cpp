@@ -19,6 +19,7 @@ Display display(DISPLAY_CLK_PIN, DISPLAY_DIO_PIN);
 
 void setup() {
     Serial.begin(57600);
+    display.displayValue(8888);
     configurationManager.setup();
     scale.setup();
 }
@@ -29,7 +30,7 @@ void loop() {
     scale.run();
 
     int cans = round(scale.getAmountOfCans());
-    display.displayCans(cans);
+    display.displayValue(cans);
 
     Serial.println("Amount of cans currently in the bin: " + String(cans));
 }

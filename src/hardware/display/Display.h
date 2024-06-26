@@ -12,7 +12,7 @@ class Display {
         TM1637Display* display;
     public:
         Display(int clkPin, int dioPin);
-        void displayCans(int cans);
+        void displayValue(int cans);
 };
 
 

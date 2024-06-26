@@ -10,6 +10,6 @@ Display::Display(int clkPin, int dioPin) {
     display->setBrightness(0x0f);
 }
 
-void Display::displayCans(int cans) {
+void Display::displayValue(int cans) {
     display->showNumberDec(cans, false);
 }
