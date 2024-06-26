@@ -29,7 +29,7 @@ char angulon_index_html[]
         </div>
         <div class='form-group'>
             <label for='averageCanWeightGrams'>Average Can Weight (grams)</label>
-            <input type='number' step='0.1' class='form-control' id='averageCanWeightGrams' name='averageCanWeightGrams' placeholder='Average Can Weight' value='{{averageCanWeightGrams}}'>
+            <input type='number' step='0.1' class='form-control' id='averageCanWeightGrams' name='averageCanWeightGrams' placeholder='Average Can Weight (13.7g?)' value='{{averageCanWeightGrams}}'>
         </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
@@ -178,7 +178,7 @@ void ConfigurationManager::loadConfiguration() {
     SystemConfiguration config{};
     config.ssid = preferences.getString("ssid", "");
     config.password = preferences.getString("password", "");
-    config.averageCanWeightGrams = preferences.getFloat("averageCanWeightGrams", 0.0);
+    config.averageCanWeightGrams = preferences.getFloat("averageCanWeightGrams", 13.7);
     systemConfiguration = config;
 }
 
